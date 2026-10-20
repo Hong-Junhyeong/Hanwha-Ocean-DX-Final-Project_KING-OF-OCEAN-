@@ -1,0 +1,22 @@
+{
+ "$schema":"http://json-schema.org/draft-07/schema#",
+ "title":"B203 production viewer inbound envelope",
+ "type":"object","additionalProperties":false,
+ "required":["protocol","type","viewerId"],
+ "properties":{
+  "protocol":{"const":"B203_PRODUCTION_VIEWER_V1"},
+  "type":{"enum":["HELLO","PLAN_ACK","STATE_REQUEST","VIEWER_ERROR"]},
+  "viewerId":{"type":"string","minLength":1,"maxLength":160},
+  "channel":{"type":["string","null"],"maxLength":160},
+  "planId":{"type":"string","minLength":1,"maxLength":160},
+  "inputVersion":{"type":"integer","minimum":0},
+  "requestId":{"type":"integer","minimum":0},
+  "timestamp":{"type":"string","maxLength":40,"pattern":"(Z|[+-]\\d\\d:\\d\\d)$"},
+  "message":{"type":"string","maxLength":1000}
+ },
+ "allOf":[
+  {"if":{"properties":{"type":{"enum":["PLAN_ACK","STATE_REQUEST"]}}},"then":{"required":["channel","planId","inputVersion"],"properties":{"channel":{"type":"string","minLength":1}}}},
+  {"if":{"properties":{"type":{"const":"STATE_REQUEST"}}},"then":{"required":["requestId","timestamp"]}},
+  {"if":{"properties":{"type":{"const":"VIEWER_ERROR"}}},"then":{"required":["message"]}}
+ ]
+}

@@ -1,0 +1,907 @@
+{
+  "schema_version": "B203_WEB_CONTENT_DATA_2.0.0",
+  "generated_on": "2026-10-16",
+  "timezone": "Asia/Seoul",
+  "title": "Shipyard Digital Twin — 블록 조립 일정·품질 위험 대응 시뮬레이션",
+  "purpose": "B-203 65% / regular buffer 0h -> R4 quality-history-based rework -> required buffer -> budget recovery comparison",
+  "data_policy": {
+    "dataset_class": "SYNTHETIC_SCENARIO_NOT_YARD_KPI",
+    "notRealHanwhaOceanStatistics": true,
+    "historicalBlockProductionCounts": null,
+    "historicalInspectionsUnit": "first-pass inspection checkpoint (not completed large block)",
+    "observedShipyardDefectRate": null,
+    "observedReworkRate": null,
+    "scenarioFirstPassFailRate": 0.06,
+    "scenarioReworkNeedRate": 0.045,
+    "aboutIndustryReferences": "Inspection categories are supported by classification society standards; no verified LNGC yard percentages.",
+    "classificationScopeCaution": "ABS 2007 Guide explicitly generally excludes special gas tanker types; it is used only to identify hull quality categories, not LNGC acceptance limits or defect rates.",
+    "expectedNotConfirmed": true,
+    "noCausalCalibration": true,
+    "lateStageInspectionMayInvalidateSimpleCapacityResults": true
+  },
+  "source_manifest": {
+    "Q_REPORT_V2": "B203_팀프로젝트_핵심데이터_요약보고서_v2_20261016.docx",
+    "Q_IMPLEMENTATION_V2": "B203_웹사이트_구현용_데이터설계서_v2_20261016.docx",
+    "Q_XLSX_V2": "B203_Quality_Inspection_Synthetic_v2_20261016.xlsx",
+    "Q_MONTHLY_CSV_V2": "B203_Monthly_Quality_Synthetic_v2.csv",
+    "Q_RECORDS_CSV_V2": "B203_Quality_Inspection_Records_v2.csv",
+    "STAGE5_REFERENCE": "B203_5단계_전체통합_보고서.docx (후행 단계 별도, v2 R4와 미통합)",
+    "PROCEDURAL_IACS": "https://iacs.org.uk/resolutions/recommendations/41-60/rec-47-rev10-cln",
+    "PROCEDURAL_ABS": "https://ww2.eagle.org/content/dam/eagle/rules-and-guides/archives/conventional_ocean_service/87_shipbuildingandrepairqualstand_hullstruct_const_2007/pub87_srqs_guide.pdf",
+    "PROCEDURAL_DNV": "https://www.dnv.com/training/newbuilding-site-supervision-survey-simulator-practice-151906/"
+  },
+  "nav": [
+    {
+      "order": "01",
+      "id": "overview",
+      "label": "개요",
+      "status": "DATA_READY",
+      "primary_source": "Q_REPORT"
+    },
+    {
+      "order": "02",
+      "id": "shipyard",
+      "label": "3D 조선소",
+      "status": "VISUALIZATION_ADAPTER_REQUIRED",
+      "primary_source": "UI_REF"
+    },
+    {
+      "order": "03",
+      "id": "assembly",
+      "label": "B구역 대조립",
+      "status": "ID_MAPPING_UNCONFIRMED",
+      "primary_source": "UI_REF"
+    },
+    {
+      "order": "04",
+      "id": "schedule",
+      "label": "생산 계획/일정",
+      "status": "DATA_READY_WITH_BASELINE_LIMITS",
+      "primary_source": "Q_REPORT"
+    },
+    {
+      "order": "05",
+      "id": "quality",
+      "label": "품질 관리",
+      "status": "DATA_READY_SYNTHETIC",
+      "primary_source": "Q_EXCEL"
+    },
+    {
+      "order": "06",
+      "id": "risk",
+      "label": "위험 시뮬레이션",
+      "status": "CONDITIONAL_SCENARIOS",
+      "primary_source": "Q_JSON"
+    },
+    {
+      "order": "07",
+      "id": "recovery",
+      "label": "대응안 비교",
+      "status": "CONDITIONAL_SCENARIOS",
+      "primary_source": "Q_JSON"
+    },
+    {
+      "order": "08",
+      "id": "report",
+      "label": "분석 리포트",
+      "status": "DATA_READY",
+      "primary_source": "Q_REPORT"
+    },
+    {
+      "order": "09",
+      "id": "settings",
+      "label": "설정/데이터 출처",
+      "status": "REQUIRED_FOR_TRANSPARENCY",
+      "primary_source": "Q_JSON"
+    }
+  ],
+  "overview": {
+    "blockId": "B-203",
+    "displayProgressPct": 65,
+    "calculatedProgressPct": 64.70588235294117,
+    "plannedTotalMH": 340,
+    "completedMH": 220,
+    "normalRemainingMH": 120,
+    "crew": 5,
+    "workdays": 3,
+    "hoursPerDay": 8,
+    "regularCapacityMH": 120,
+    "regularBufferHours": 0,
+    "baseCostKRW": 28800000,
+    "budgetKRW": 30000000,
+    "budgetRoomKRW": 1200000,
+    "snapshot": "2026-10-12T07:00:00+09:00",
+    "blockHandoverDeadline": "2026-10-14T16:00:00+09:00",
+    "riskModelDefault": "R4_12M_BASE_V2",
+    "isSynthetic": true,
+    "noVerifiedHistoricalBufferDepletionLog": true,
+    "source": "Q_REPORT",
+    "qualityDataVersion": "v2",
+    "qualityHistoryLabel": "대조립 최초 검사 체크포인트 합성 이력"
+  },
+  "workSequence": {
+    "label": "120MH 를 5명 동일 투입·직렬 공정으로 배치한 UI 예시",
+    "source": "Q_REPORT + MODEL_DERIVED",
+    "calendar": "Mon-Fri 07:00-12:00,13:00-16:00",
+    "steps": [
+      {
+        "id": "T10",
+        "label": "취부",
+        "remaining_mh": 20,
+        "duration_work_h": 4,
+        "start": "2026-10-12T07:00:00+09:00",
+        "end": "2026-10-12T11:00:00+09:00"
+      },
+      {
+        "id": "T20",
+        "label": "용접",
+        "remaining_mh": 80,
+        "duration_work_h": 16,
+        "start": "2026-10-12T11:00:00+09:00",
+        "end": "2026-10-14T11:00:00+09:00"
+      },
+      {
+        "id": "T30",
+        "label": "마감·검사 준비",
+        "remaining_mh": 15,
+        "duration_work_h": 3,
+        "start": "2026-10-14T11:00:00+09:00",
+        "end": "2026-10-14T15:00:00+09:00"
+      },
+      {
+        "id": "T40",
+        "label": "최초 검사 대응",
+        "remaining_mh": 5,
+        "duration_work_h": 1,
+        "start": "2026-10-14T15:00:00+09:00",
+        "end": "2026-10-14T16:00:00+09:00"
+      }
+    ],
+    "h2InitialBuffer": null
+  },
+  "quality": {
+    "source": "NEW_CONSTRUCTED_SYNTHETIC_CHECKPOINT_DATA",
+    "months": [
+      {
+        "month": "2025-10",
+        "firstInspections": 90,
+        "initialFailures": 5,
+        "reworkCases": 4,
+        "weldInspections": 49,
+        "weldFailures": 3,
+        "weldReworks": 2,
+        "fitupInspections": 27,
+        "fitupFailures": 1,
+        "fitupReworks": 1,
+        "dimensionInspections": 14,
+        "dimensionFailures": 1,
+        "dimensionReworks": 1,
+        "firstFailRate": 0.05555555555555555,
+        "reworkRate": 0.044444444444444446
+      },
+      {
+        "month": "2025-11",
+        "firstInspections": 100,
+        "initialFailures": 4,
+        "reworkCases": 3,
+        "weldInspections": 55,
+        "weldFailures": 3,
+        "weldReworks": 2,
+        "fitupInspections": 30,
+        "fitupFailures": 1,
+        "fitupReworks": 1,
+        "dimensionInspections": 15,
+        "dimensionFailures": 0,
+        "dimensionReworks": 0,
+        "firstFailRate": 0.04,
+        "reworkRate": 0.03
+      },
+      {
+        "month": "2025-12",
+        "firstInspections": 95,
+        "initialFailures": 5,
+        "reworkCases": 3,
+        "weldInspections": 52,
+        "weldFailures": 3,
+        "weldReworks": 2,
+        "fitupInspections": 28,
+        "fitupFailures": 1,
+        "fitupReworks": 1,
+        "dimensionInspections": 15,
+        "dimensionFailures": 1,
+        "dimensionReworks": 0,
+        "firstFailRate": 0.05263157894736842,
+        "reworkRate": 0.031578947368421054
+      },
+      {
+        "month": "2026-01",
+        "firstInspections": 95,
+        "initialFailures": 5,
+        "reworkCases": 4,
+        "weldInspections": 52,
+        "weldFailures": 4,
+        "weldReworks": 3,
+        "fitupInspections": 28,
+        "fitupFailures": 1,
+        "fitupReworks": 1,
+        "dimensionInspections": 15,
+        "dimensionFailures": 0,
+        "dimensionReworks": 0,
+        "firstFailRate": 0.05263157894736842,
+        "reworkRate": 0.042105263157894736
+      },
+      {
+        "month": "2026-02",
+        "firstInspections": 90,
+        "initialFailures": 5,
+        "reworkCases": 4,
+        "weldInspections": 49,
+        "weldFailures": 3,
+        "weldReworks": 3,
+        "fitupInspections": 27,
+        "fitupFailures": 1,
+        "fitupReworks": 0,
+        "dimensionInspections": 14,
+        "dimensionFailures": 1,
+        "dimensionReworks": 1,
+        "firstFailRate": 0.05555555555555555,
+        "reworkRate": 0.044444444444444446
+      },
+      {
+        "month": "2026-03",
+        "firstInspections": 100,
+        "initialFailures": 7,
+        "reworkCases": 5,
+        "weldInspections": 53,
+        "weldFailures": 4,
+        "weldReworks": 4,
+        "fitupInspections": 30,
+        "fitupFailures": 2,
+        "fitupReworks": 1,
+        "dimensionInspections": 17,
+        "dimensionFailures": 1,
+        "dimensionReworks": 0,
+        "firstFailRate": 0.07,
+        "reworkRate": 0.05
+      },
+      {
+        "month": "2026-04",
+        "firstInspections": 100,
+        "initialFailures": 7,
+        "reworkCases": 5,
+        "weldInspections": 54,
+        "weldFailures": 4,
+        "weldReworks": 3,
+        "fitupInspections": 30,
+        "fitupFailures": 2,
+        "fitupReworks": 1,
+        "dimensionInspections": 16,
+        "dimensionFailures": 1,
+        "dimensionReworks": 1,
+        "firstFailRate": 0.07,
+        "reworkRate": 0.05
+      },
+      {
+        "month": "2026-05",
+        "firstInspections": 110,
+        "initialFailures": 7,
+        "reworkCases": 5,
+        "weldInspections": 59,
+        "weldFailures": 4,
+        "weldReworks": 3,
+        "fitupInspections": 33,
+        "fitupFailures": 2,
+        "fitupReworks": 1,
+        "dimensionInspections": 18,
+        "dimensionFailures": 1,
+        "dimensionReworks": 1,
+        "firstFailRate": 0.06363636363636363,
+        "reworkRate": 0.045454545454545456
+      },
+      {
+        "month": "2026-06",
+        "firstInspections": 100,
+        "initialFailures": 7,
+        "reworkCases": 6,
+        "weldInspections": 55,
+        "weldFailures": 4,
+        "weldReworks": 3,
+        "fitupInspections": 30,
+        "fitupFailures": 2,
+        "fitupReworks": 2,
+        "dimensionInspections": 15,
+        "dimensionFailures": 1,
+        "dimensionReworks": 1,
+        "firstFailRate": 0.07,
+        "reworkRate": 0.06
+      },
+      {
+        "month": "2026-07",
+        "firstInspections": 105,
+        "initialFailures": 7,
+        "reworkCases": 5,
+        "weldInspections": 57,
+        "weldFailures": 4,
+        "weldReworks": 3,
+        "fitupInspections": 32,
+        "fitupFailures": 2,
+        "fitupReworks": 1,
+        "dimensionInspections": 16,
+        "dimensionFailures": 1,
+        "dimensionReworks": 1,
+        "firstFailRate": 0.06666666666666667,
+        "reworkRate": 0.047619047619047616
+      },
+      {
+        "month": "2026-08",
+        "firstInspections": 110,
+        "initialFailures": 6,
+        "reworkCases": 5,
+        "weldInspections": 59,
+        "weldFailures": 4,
+        "weldReworks": 3,
+        "fitupInspections": 34,
+        "fitupFailures": 2,
+        "fitupReworks": 2,
+        "dimensionInspections": 17,
+        "dimensionFailures": 0,
+        "dimensionReworks": 0,
+        "firstFailRate": 0.05454545454545454,
+        "reworkRate": 0.045454545454545456
+      },
+      {
+        "month": "2026-09",
+        "firstInspections": 105,
+        "initialFailures": 7,
+        "reworkCases": 5,
+        "weldInspections": 56,
+        "weldFailures": 5,
+        "weldReworks": 3,
+        "fitupInspections": 31,
+        "fitupFailures": 1,
+        "fitupReworks": 1,
+        "dimensionInspections": 18,
+        "dimensionFailures": 1,
+        "dimensionReworks": 1,
+        "firstFailRate": 0.06666666666666667,
+        "reworkRate": 0.047619047619047616
+      }
+    ],
+    "period12": {
+      "firstInspections": 1200,
+      "firstFailures": 72,
+      "firstFailRate": 0.06,
+      "reworks": 54,
+      "reworkNeededRate": 0.045,
+      "reworkShareOfFailures": 0.75,
+      "inspectionTypeBreakdown": {
+        "WELD": {
+          "inspections": 650,
+          "failures": 45,
+          "reworks": 34,
+          "rework_mh": 102.0
+        },
+        "FITUP": {
+          "inspections": 360,
+          "failures": 18,
+          "reworks": 13,
+          "rework_mh": 26.0
+        },
+        "DIMENSION": {
+          "inspections": 190,
+          "failures": 9,
+          "reworks": 7,
+          "rework_mh": 28.0
+        }
+      }
+    },
+    "period6": {
+      "firstInspections": 630,
+      "firstFailures": 41,
+      "firstFailRate": 0.06507936507936508,
+      "reworks": 31,
+      "reworkNeededRate": 0.049206349206349205,
+      "reworkShareOfFailures": 0.7560975609756098,
+      "inspectionTypeBreakdown": {
+        "WELD": {
+          "inspections": 340,
+          "failures": 25,
+          "reworks": 18,
+          "rework_mh": 54.0
+        },
+        "FITUP": {
+          "inspections": 190,
+          "failures": 11,
+          "reworks": 8,
+          "rework_mh": 16.0
+        },
+        "DIMENSION": {
+          "inspections": 100,
+          "failures": 5,
+          "reworks": 5,
+          "rework_mh": 20.0
+        }
+      }
+    },
+    "sourceTruthDefinition": "one row = one first-inspection checkpoint; not one completed block and not one welding defect",
+    "pending50ByType": {
+      "WELD": 27,
+      "FITUP": 15,
+      "DIMENSION": 8
+    },
+    "remainingInspectionCount": 50,
+    "inputModel": {
+      "teamSize": 5,
+      "reinspectionHours": 1,
+      "reinspectionCrewMH": 5,
+      "inspectorHourCostKRW": 50000,
+      "mhPerReworkByType": {
+        "WELD": 3.0,
+        "FITUP": 2.0,
+        "DIMENSION": 4.0
+      },
+      "initialQCAlsoRequiresOneContiguousHour": true,
+      "noAlphaCorrection": true
+    },
+    "notDerivedFromActualYardStatistics": true
+  },
+  "risk": {
+    "source": "SYNTHETIC_FIRST_INSPECTION_v2",
+    "scenarios": [
+      {
+        "id": "R4_LOW_V2",
+        "source": "Constructed sensitivity (rate x0.75)",
+        "firstFailRate": 0.045,
+        "reworkRate": 0.03375,
+        "expectedInitialFailures": 2.2486336032388663,
+        "expectedReworkCases": 1.6865334008097164,
+        "reworkMH": 4.874402834008097,
+        "requiredBufferHours": 1.9748805668016194,
+        "availableBufferHours": 0,
+        "issueState": "EXPECTED",
+        "affectedObjectId": null,
+        "notRealQualityPrediction": true
+      },
+      {
+        "id": "R4_12M_BASE_V2",
+        "source": "Synthetic first-pass record 12M",
+        "firstFailRate": 0.06,
+        "reworkRate": 0.045,
+        "expectedInitialFailures": 2.9981781376518217,
+        "expectedReworkCases": 2.248711201079622,
+        "reworkMH": 6.499203778677463,
+        "requiredBufferHours": 2.2998407557354925,
+        "availableBufferHours": 0,
+        "issueState": "EXPECTED",
+        "affectedObjectId": null,
+        "notRealQualityPrediction": true
+      },
+      {
+        "id": "R4_6M_CHECK_V2",
+        "source": "Synthetic first-pass record last 6M",
+        "firstFailRate": 0.06507936507936508,
+        "reworkRate": 0.049206349206349205,
+        "expectedInitialFailures": 3.253715170278638,
+        "expectedReworkCases": 2.4609907120743033,
+        "reworkMH": 7.151393188854489,
+        "requiredBufferHours": 2.430278637770898,
+        "availableBufferHours": 0,
+        "issueState": "EXPECTED",
+        "affectedObjectId": null
+      },
+      {
+        "id": "R4_HIGH_V2",
+        "source": "Constructed sensitivity (rate x4/3)",
+        "firstFailRate": 0.08,
+        "reworkRate": 0.06,
+        "expectedInitialFailures": 3.997570850202429,
+        "expectedReworkCases": 2.998281601439496,
+        "reworkMH": 8.665605038236617,
+        "requiredBufferHours": 2.7331210076473234,
+        "availableBufferHours": 0,
+        "issueState": "EXPECTED",
+        "affectedObjectId": null,
+        "notRealQualityPrediction": true
+      }
+    ],
+    "r3": {
+      "id": "R3_ONLY",
+      "duration_hours": 2,
+      "crew_idle": 5,
+      "lostOpportunityMH": 10,
+      "remainingWorkMHDoesNotIncrease": true,
+      "delayHoursIfCriticalNoAlternative": 2,
+      "chance_or_frequency": null,
+      "issueState": "EXPECTED"
+    },
+    "combined": {
+      "id": "R3_R4_SEQUENTIAL_ILLUSTRATION_V2",
+      "delayWorkingHoursIfSequential": 4.2998407557354925,
+      "lostOpportunityMH": 10,
+      "remainingBaseWorkMH": 120,
+      "scheduleRecalculationRequired": true
+    },
+    "expectedQualityOverlay": {
+      "issueState": "EXPECTED",
+      "affectedObjectId": null,
+      "zoneIdCandidate": "ZONE_B201_INSPECTION",
+      "mappingStatus": "UNCONFIRMED"
+    }
+  },
+  "recovery": {
+    "source": "calendar-based v2 test with two continuous one-hour QC gates",
+    "defaultVisibleStrategy": "A2",
+    "options": [
+      {
+        "id": "N",
+        "name": "무대응(다음 작업일 정규 재작업)",
+        "preInspectionReadyAt": "2026-10-14T15:00:00",
+        "initialQCStart": "2026-10-14T15:00:00",
+        "initialQCEnd": "2026-10-14T16:00:00",
+        "reworkFinishedAt": "2026-10-15T08:18:00",
+        "reinspectionStart": "2026-10-15T08:18:00",
+        "predictedHandover": "2026-10-15T09:18:00",
+        "scheduleMarginMinutes": -1038.0,
+        "deadlineMet": false,
+        "incrementalCostKRW": 395000,
+        "totalCostKRW": 29195000,
+        "budgetRemainingKRW": 805000,
+        "budgetMet": true,
+        "expectedReworkMH": 6.5,
+        "plannedOvertimeCrewHours": 0,
+        "plannedOvertimeMH": 0,
+        "plannedSupportRealMH": 0,
+        "additionalRegularMHAfterDeadline": 11.5,
+        "conditions": [
+          "QC 가능",
+          "추가 일자 인력 가용"
+        ],
+        "feasibility": "FAIL",
+        "notRealWorkAuthorization": true
+      },
+      {
+        "id": "A1",
+        "name": "기존 5인 사전 OT 합계 2.5h",
+        "preInspectionReadyAt": "2026-10-14T11:30:00",
+        "initialQCStart": "2026-10-14T13:00:00",
+        "initialQCEnd": "2026-10-14T14:00:00",
+        "reworkFinishedAt": "2026-10-14T15:18:00",
+        "reinspectionStart": "2026-10-15T07:00:00",
+        "predictedHandover": "2026-10-15T08:00:00",
+        "scheduleMarginMinutes": -960.0,
+        "deadlineMet": false,
+        "incrementalCostKRW": 762500,
+        "totalCostKRW": 29562500,
+        "budgetRemainingKRW": 437500,
+        "budgetMet": true,
+        "expectedReworkMH": 6.5,
+        "plannedOvertimeCrewHours": 2.5,
+        "plannedOvertimeMH": 12.5,
+        "plannedSupportRealMH": 0,
+        "additionalRegularMHAfterDeadline": 5.0,
+        "conditions": [
+          "10/12·13 각1.25h 사전 OT 승인",
+          "QC 예약"
+        ],
+        "feasibility": "FAIL",
+        "notRealWorkAuthorization": true
+      },
+      {
+        "id": "A2",
+        "name": "기존 5인 사전 OT 합계 3.0h",
+        "preInspectionReadyAt": "2026-10-14T11:00:00",
+        "initialQCStart": "2026-10-14T11:00:00",
+        "initialQCEnd": "2026-10-14T12:00:00",
+        "reworkFinishedAt": "2026-10-14T14:18:00",
+        "reinspectionStart": "2026-10-14T14:18:00",
+        "predictedHandover": "2026-10-14T15:18:00",
+        "scheduleMarginMinutes": 42.0,
+        "deadlineMet": true,
+        "incrementalCostKRW": 725000,
+        "totalCostKRW": 29525000,
+        "budgetRemainingKRW": 475000,
+        "budgetMet": true,
+        "expectedReworkMH": 6.5,
+        "plannedOvertimeCrewHours": 3.0,
+        "plannedOvertimeMH": 15.0,
+        "plannedSupportRealMH": 0,
+        "additionalRegularMHAfterDeadline": 0,
+        "conditions": [
+          "10/12·13 각1.5h 사전 OT 승인",
+          "QC 예약"
+        ],
+        "feasibility": "CONDITIONAL",
+        "notRealWorkAuthorization": true
+      },
+      {
+        "id": "A3",
+        "name": "기존 5인 사전 OT 합계 4.0h",
+        "preInspectionReadyAt": "2026-10-14T10:00:00",
+        "initialQCStart": "2026-10-14T10:00:00",
+        "initialQCEnd": "2026-10-14T11:00:00",
+        "reworkFinishedAt": "2026-10-14T13:18:00",
+        "reinspectionStart": "2026-10-14T13:18:00",
+        "predictedHandover": "2026-10-14T14:18:00",
+        "scheduleMarginMinutes": 102.0,
+        "deadlineMet": true,
+        "incrementalCostKRW": 950000,
+        "totalCostKRW": 29750000,
+        "budgetRemainingKRW": 250000,
+        "budgetMet": true,
+        "expectedReworkMH": 6.5,
+        "plannedOvertimeCrewHours": 4.0,
+        "plannedOvertimeMH": 20.0,
+        "plannedSupportRealMH": 0,
+        "additionalRegularMHAfterDeadline": 0,
+        "conditions": [
+          "10/12·13 각2h 사전 OT 승인",
+          "QC 예약"
+        ],
+        "feasibility": "CONDITIONAL",
+        "notRealWorkAuthorization": true
+      },
+      {
+        "id": "B1",
+        "name": "B-204 적격자1명 3일 지원(효율100%)",
+        "preInspectionReadyAt": "2026-10-14T10:10:00",
+        "initialQCStart": "2026-10-14T10:10:00",
+        "initialQCEnd": "2026-10-14T11:10:00",
+        "reworkFinishedAt": "2026-10-14T13:15:00",
+        "reinspectionStart": "2026-10-14T13:15:00",
+        "predictedHandover": "2026-10-14T14:15:00",
+        "scheduleMarginMinutes": 105.0,
+        "deadlineMet": true,
+        "incrementalCostKRW": 770000,
+        "totalCostKRW": 29570000,
+        "budgetRemainingKRW": 430000,
+        "budgetMet": true,
+        "expectedReworkMH": 6.5,
+        "plannedOvertimeCrewHours": 0,
+        "plannedOvertimeMH": 0,
+        "plannedSupportRealMH": 24,
+        "additionalRegularMHAfterDeadline": 0,
+        "conditions": [
+          "B-204 24MH 원공정 영향 검증",
+          "자격·작업면·QC 예약"
+        ],
+        "feasibility": "CONDITIONAL",
+        "notRealWorkAuthorization": true
+      },
+      {
+        "id": "B2",
+        "name": "B-204 적격자1명 2일 지원(효율90%)",
+        "preInspectionReadyAt": "2026-10-14T11:07:12",
+        "initialQCStart": "2026-10-14T13:00:00",
+        "initialQCEnd": "2026-10-14T14:00:00",
+        "reworkFinishedAt": "2026-10-14T15:18:00",
+        "reinspectionStart": "2026-10-15T07:00:00",
+        "predictedHandover": "2026-10-15T08:00:00",
+        "scheduleMarginMinutes": -960.0,
+        "deadlineMet": false,
+        "incrementalCostKRW": 680000,
+        "totalCostKRW": 29480000,
+        "budgetRemainingKRW": 520000,
+        "budgetMet": true,
+        "expectedReworkMH": 6.5,
+        "plannedOvertimeCrewHours": 0,
+        "plannedOvertimeMH": 0,
+        "plannedSupportRealMH": 16,
+        "additionalRegularMHAfterDeadline": 5.0,
+        "conditions": [
+          "B-204 16MH 영향 검증",
+          "90% 효율 가정",
+          "QC 연속 슬롯"
+        ],
+        "feasibility": "FAIL",
+        "notRealWorkAuthorization": true
+      },
+      {
+        "id": "C1",
+        "name": "외부 적격자1명 2일 지원(효율100%)",
+        "preInspectionReadyAt": "2026-10-14T10:48:00",
+        "initialQCStart": "2026-10-14T10:48:00",
+        "initialQCEnd": "2026-10-14T11:48:00",
+        "reworkFinishedAt": "2026-10-14T14:06:00",
+        "reinspectionStart": "2026-10-14T14:06:00",
+        "predictedHandover": "2026-10-14T15:06:00",
+        "scheduleMarginMinutes": 54.0,
+        "deadlineMet": true,
+        "incrementalCostKRW": 850000,
+        "totalCostKRW": 29650000,
+        "budgetRemainingKRW": 350000,
+        "budgetMet": true,
+        "expectedReworkMH": 6.5,
+        "plannedOvertimeCrewHours": 0,
+        "plannedOvertimeMH": 0,
+        "plannedSupportRealMH": 16,
+        "additionalRegularMHAfterDeadline": 0,
+        "conditions": [
+          "외부 숙련·자격",
+          "계약·착수비 미반영",
+          "QC 예약"
+        ],
+        "feasibility": "CONDITIONAL",
+        "notRealWorkAuthorization": true
+      },
+      {
+        "id": "C2",
+        "name": "외부 적격자1명 3일 지원(효율100%)",
+        "preInspectionReadyAt": "2026-10-14T10:10:00",
+        "initialQCStart": "2026-10-14T10:10:00",
+        "initialQCEnd": "2026-10-14T11:10:00",
+        "reworkFinishedAt": "2026-10-14T13:15:00",
+        "reinspectionStart": "2026-10-14T13:15:00",
+        "predictedHandover": "2026-10-14T14:15:00",
+        "scheduleMarginMinutes": 105.0,
+        "deadlineMet": true,
+        "incrementalCostKRW": 1250000,
+        "totalCostKRW": 30050000,
+        "budgetRemainingKRW": -50000,
+        "budgetMet": false,
+        "expectedReworkMH": 6.5,
+        "plannedOvertimeCrewHours": 0,
+        "plannedOvertimeMH": 0,
+        "plannedSupportRealMH": 24,
+        "additionalRegularMHAfterDeadline": 0,
+        "conditions": [
+          "외부 숙련·자격",
+          "계약·착수비 미반영",
+          "QC 예약"
+        ],
+        "feasibility": "FAIL",
+        "notRealWorkAuthorization": true
+      }
+    ],
+    "defaultViewShowsConditions": true,
+    "doNotCallCheapOptionOptimal": true,
+    "requiredFeasibilityChecks": [
+      "deadline",
+      "budget",
+      "qualified staff",
+      "overtime approval",
+      "inspection slot",
+      "B-204 originating task impact",
+      "equipment capacity",
+      "safety approvals",
+      "QC 1-hour unbroken slot before and after rework",
+      "repair/inspection must follow initial inspection",
+      "production blocking downstream"
+    ]
+  },
+  "downstream": {
+    "provenance": "DOWNSTREAM",
+    "scenario_id": "STAGE5_S0_REG",
+    "case_status": "SEPARATE_CONDITIONAL_MODEL",
+    "risk_model": "R05 rework=0MH and reinspection=0h; inspection failure => HOLD",
+    "baseline_uses_planned_welding_ot": true,
+    "planned_welding_ot_real_mh": 5.555555555555555,
+    "planned_welding_ot_cost_krw": 250000,
+    "milestones": [
+      {
+        "id": "L20",
+        "name": "상차·고박 완료",
+        "time": "2026-10-14T16:00:00+09:00",
+        "status": "CONDITIONAL"
+      },
+      {
+        "id": "L30",
+        "name": "트랜스포터 운반",
+        "start": "2026-10-15T07:00:00+09:00",
+        "end": "2026-10-15T08:00:00+09:00",
+        "work_h": 1
+      },
+      {
+        "id": "L40",
+        "name": "하차·후행 인수",
+        "start": "2026-10-15T08:00:00+09:00",
+        "end": "2026-10-15T08:30:00+09:00",
+        "work_h": 0.5
+      },
+      {
+        "id": "H10",
+        "name": "선행의장 착수",
+        "start": "2026-10-15T08:30:00+09:00",
+        "baseline_target": "2026-10-15T07:00:00+09:00",
+        "target_delay_work_h": 1.5
+      },
+      {
+        "id": "H20",
+        "name": "선행도장 착수 가능",
+        "time": "2026-10-16T08:30:00+09:00",
+        "conditional": "H10 8작업시간 완료 후 다음 작업슬롯"
+      }
+    ],
+    "approved_evening_transport": false,
+    "evening_example": {
+      "id": "STAGE5_S0_EVENING_UNAPPROVED",
+      "L30": "2026-10-14T16:00:00+09:00",
+      "L40_end": "2026-10-14T17:30:00+09:00",
+      "H10": "2026-10-15T07:00:00+09:00",
+      "H20": "2026-10-16T07:00:00+09:00",
+      "status": "HOLD_REQUIRED_APPROVAL"
+    },
+    "r03_example": {
+      "id": "STAGE5_R03_MATERIAL_4H",
+      "block_complete_L20": "2026-10-15T11:00:00+09:00",
+      "handover_L40": "2026-10-15T13:30:00+09:00",
+      "H10": "2026-10-15T13:30:00+09:00",
+      "H20": "2026-10-16T13:30:00+09:00",
+      "H10_target_delay_work_h": 5.5
+    },
+    "separate_cost_ledger": {
+      "original_budget_krw": 30000000,
+      "base_block_group_cost_krw": 28800000,
+      "block_group_includes_B204": true,
+      "planned_ot_cost_krw": 250000,
+      "L10_L20_labor_if_not_included_krw": 150000,
+      "L30_L40_regular_if_not_included_krw": 105000,
+      "L30_L40_evening_if_not_included_krw": 157500,
+      "H10_waiting_value_not_confirmed_incremental_cash": true
+    },
+    "do_not_merge_until": [
+      "same milestone definition approved",
+      "S0 planned OT reconciled with R4 baseline",
+      "R05 hold/rework model extended and validated",
+      "cost boundaries and 3,000만원 approval reconciled",
+      "inspection slot and truck loading handoffs checked"
+    ],
+    "mergeStatus": "SEPARATE_QUALITY_ENGINE_NOT_COMBINED",
+    "qualitySourceNow": "v2; downstream R05 model still zero rework/HOLD",
+    "importantMilestoneDifference": "R4 estimated QC handover is NOT automatically L20 load-lashing completion."
+  },
+  "integration": {
+    "simulationContract": "SimulationState V1 from separate team contract (unverified full compatibility)",
+    "analysisIsOwnerOfCalculations": true,
+    "threeDOnlyVisualizesValues": true,
+    "facilityAnchor": "assembly_b_zone",
+    "facilityCandidate": "SHOP_B201",
+    "blockId": "B-203",
+    "modelName": "LNGC Fore Body Bottom Block prototype",
+    "mappingStatus": "UNCONFIRMED",
+    "doNotAutoAddBlockIdToFrozenContract": true,
+    "sceneStates": [
+      "YARD_OVERVIEW",
+      "FACTORY_OVERVIEW",
+      "PROCESS_VIEW",
+      "ISSUE_FOCUS",
+      "SCENARIO_VIEW"
+    ],
+    "expectedVsConfirmed": "EXPECTED R4 highlights inspection zone, never a fabricated exact weld defect",
+    "dataSideScenarioCode": "R4_12M_BASE_V2",
+    "shopIdVsBlockId": "SHOP_B201 may be facility, B-203 is analyzed block; do not equate automatically."
+  },
+  "display_examples": {
+    "primary": {
+      "quality": {
+        "id": "R4_12M_BASE_V2",
+        "source": "Synthetic first-pass record 12M",
+        "firstFailRate": 0.06,
+        "reworkRate": 0.045,
+        "expectedInitialFailures": 2.9981781376518217,
+        "expectedReworkCases": 2.248711201079622,
+        "reworkMH": 6.499203778677463,
+        "requiredBufferHours": 2.2998407557354925,
+        "availableBufferHours": 0,
+        "issueState": "EXPECTED",
+        "affectedObjectId": null,
+        "notRealQualityPrediction": true
+      },
+      "recommendedConditionalStrategy": "A2",
+      "status": "CONDITIONAL_PASS_NOT_OPERATIONAL_AUTHORIZATION"
+    },
+    "screenshotOld4Cases": {
+      "status": "REFERENCE_MOCKUP_DO_NOT_USE_AS_V2",
+      "oldExpectedCases": 4
+    }
+  },
+  "not_available_data": [
+    "verified LNGC first-pass inspection rates",
+    "real Hanwha Ocean B-203 inspection logs",
+    "real block throughput / month",
+    "approved QC appointments",
+    "approved overtime",
+    "available qualified B204/external workers",
+    "B204 source block schedule margin",
+    "validated L20 to H10 combined event schedule and cost boundary"
+  ]
+}

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 620" fill="none">
+  <defs>
+    <linearGradient id="hull" x1="55" y1="350" x2="320" y2="550" gradientUnits="userSpaceOnUse"><stop stop-color="#8aa2b6"/><stop offset=".56" stop-color="#4a687f"/><stop offset="1" stop-color="#173b58"/></linearGradient>
+    <linearGradient id="deck" x1="90" y1="250" x2="350" y2="470" gradientUnits="userSpaceOnUse"><stop stop-color="#abbcc8"/><stop offset="1" stop-color="#527087"/></linearGradient>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop stop-color="white" stop-opacity="0"/><stop offset=".3" stop-color="white" stop-opacity=".8"/><stop offset="1" stop-color="white"/></linearGradient>
+    <mask id="mask"><rect width="400" height="620" fill="url(#fade)"/></mask>
+  </defs>
+  <g mask="url(#mask)">
+    <g stroke="#69859a" stroke-width="2" opacity=".55"><path d="M42 387V150l140 55M42 153l97-31 51 66M139 124v207M151 178l-6 57M345 441V198l-104 20M345 201l-94-43-39 59M252 162v142M323 228l-4 78"/><path d="M44 166l96-30M43 190l96-24M43 217l96-23M44 246l94-18"/></g>
+    <path d="M-38 361 273 458 381 425 350 497 272 555 24 451Z" fill="url(#hull)" stroke="#a2b4c2" stroke-width="2"/>
+    <path d="m-36 359 100-50 317 116-108 33Z" fill="url(#deck)" stroke="#b8c7d0" stroke-width="2"/>
+    <path d="m23 374 249 80 94-28M26 391l243 82 76-24M26 416l243 87 62-39M272 458v95M281 482l58-34" stroke="#b8c8d3" stroke-width="1.5" opacity=".7"/>
+    <path d="M20 324v-76l83 24 3 83-28 17Z" fill="#668299" stroke="#c4ced5"/>
+    <path d="m20 248 36-20 86 28-39 16Zm83 24 39-16v83l-36 16" fill="#8fa5b5" stroke="#c4ced5"/>
+    <path d="m30 250 61 19v15l-61-18ZM31 278l62 19v9l-62-18M30 304l64 20" fill="#1e405c" stroke="#b4c5d1"/>
+    <path d="M48 232v-31l44 13v32M61 206v-29l27 8v29M78 184v-54M77 151l37 12M78 142l-22 5M105 266l28-12v14l-28 13" stroke="#c5d0d8" stroke-width="2"/>
+    <g fill="#8fa6b6" stroke="#c5d0d8" stroke-width="1.4">
+      <path d="m129 336 26-13 36 13v32l-26 14-36-14Z"/><path d="m195 360 26-14 37 14v33l-27 14-36-14Z"/><path d="m260 385 26-14 38 14v33l-27 14-37-14Z"/>
+    </g>
+    <g stroke="#d2dce2" stroke-width="1.3"><path d="m129 336 36 14 26-14M165 350v32m30-22 36 14 27-14m-27 14v33m29-22 37 14 27-14m-27 14v33M118 332l196 74M110 343l199 75"/><path d="m121 342 3-43 21 6-1 46m44 13 4-43 22 6-2 44m44 15 5-45 20 7-3 46"/></g>
+    <g stroke="#a9bdcb" stroke-width="2"><path d="m13 356 264 85 86-22M14 355v-18m24 26v-17m25 25v-17m24 25v-17m24 25v-17m25 25v-17m24 25v-17m25 25v-17m24 25v-17m25 25v-17m24 25v-17m25 25v-17m27 5v-17m25 9v-17m26 9v-17"/></g>
+    <path d="m-30 476 281 98 104-46M-5 510l251 84 121-43M23 547l210 64 126-37" stroke="#65879d" stroke-width="2" opacity=".6"/>
+  </g>
+</svg>

@@ -1,0 +1,40 @@
+{
+  "name": "shipyard-production-management-clean-v11",
+  "version": "11.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test tests/*.test.js",
+    "test:browser": "node tests/v11-browser.cjs",
+    "test:browser:regression": "node tests/v11-regression-browser.cjs",
+    "test:browser:legacy-v8": "node tests/v8-browser.cjs",
+    "test:browser:legacy-v7": "node tests/v7-browser.cjs",
+    "test:browser:legacy-v6": "node tests/v6-browser.cjs",
+    "test:browser:legacy-v5": "node tests/browser.cjs",
+    "test:workbooks": "node tests/verify-v11-workbooks.mjs",
+    "prepare:viewer": "node scripts/prepare-local-viewer.mjs",
+    "generate:playback": "node scripts/generate-playback.mjs",
+    "test:playback": "node --test tests/v8-playback.test.js",
+    "test:browser:legacy-v9": "node tests/v9-browser.cjs",
+    "test:browser:scenarios": "node tests/v11-scenario-browser.cjs",
+    "test:preservation": "node tests/verify-v11-preservation.mjs",
+    "test:browser:build": "node tests/v11-build-browser.cjs",
+    "test:browser:legacy-v10": "node tests/v10-browser.cjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.64.1",
+    "vite": "8.0.13"
+  },
+  "dependencies": {
+    "@fontsource-variable/noto-sans-kr": "^5.3.1",
+    "ajv": "^8.20.0",
+    "exceljs": "4.4.0",
+    "jszip": "^3.10.2"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
+}

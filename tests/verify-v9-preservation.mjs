@@ -1,0 +1,9 @@
+import fs from'node:fs';import path from'node:path';import crypto from'node:crypto';import assert from'node:assert/strict';
+const base=process.argv[2];if(!base)throw Error('사용법: node tests/verify-v9-preservation.mjs <첨부 V8 압축해제 폴더>');
+const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),walk=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(p,e.name)):[path.join(p,e.name)]);
+const allowed=new Set(['src/main.js','src/components/navigation.js','src/components/riskPage.js','src/components/shipyardViewer.js','src/styles/responsive.css']),unchanged=[],changed=[];
+for(const f of[...walk(path.join(base,'src')),...walk(path.join(base,'public'))]){const name=path.relative(base,f);assert.ok(fs.existsSync(name),name+' exists');if(hash(f)===hash(name))unchanged.push(name);else{assert.ok(allowed.has(name),'unrelated source change: '+name);changed.push(name);}}
+for(const folder of['src/engine','src/playback','src/export'])for(const f of walk(path.join(base,folder)))assert.equal(hash(f),hash(path.relative(base,f)),'authoritative '+f);
+const original='integration-reference/assembly_factory_v1.original.html',expected='e5b2d85432e189df94872bd2ca4313de0d9cf385445bcf061201097bae9b9155';assert.equal(hash(original),expected);assert.equal(hash(path.join(base,original)),expected);
+const bat=fs.readFileSync('start-dev.bat','utf8');assert.ok(!/(?<!\r)\n/.test(bat));for(const text of['cd /d "%~dp0"','where node','where npm','call npm install','--open','Clean V9'])assert.ok(bat.includes(text));
+const report={base:'Attached V8(2) ZIP',unchangedCount:unchanged.length,unchanged,changed,enginePlaybackAndExcelUnchanged:true,originalHtmlUnmodified:true,originalHtmlSHA256:expected,photoUnmodified:true,windowsStaticChecks:true,windowsExecutionTested:false};fs.writeFileSync('docs/phase9/preservation.json',JSON.stringify(report,null,2));console.log(report);

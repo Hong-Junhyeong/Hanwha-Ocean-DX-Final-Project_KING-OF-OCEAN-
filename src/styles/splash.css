@@ -1,0 +1,35 @@
+/* The desktop artwork is the exact supplied PNG, unaltered. */
+html:has(body.splash-active),body.splash-active{overflow:hidden;overscroll-behavior:none}
+.app-splash{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:#032246;color:#fff;opacity:1;transition:opacity 170ms ease-out;font-family:"Noto Sans KR",system-ui,sans-serif}
+.app-splash.is-leaving{opacity:0;pointer-events:none}
+.app-splash__artwork{position:relative;width:min(100vw,calc(100dvh * 1672 / 941));aspect-ratio:1672/941}
+.app-splash__desktop{display:block;width:100%;height:100%;object-fit:contain}
+/* Image-relative mask replaces the baked bar, including its orange glow. */
+.app-splash__progress-mask{position:absolute;left:34.93%;top:82.25%;width:30.14%;height:4.68%;background:linear-gradient(110deg,#01264f,#02224a 55%,#01234d);border-radius:8px;box-shadow:0 0 8px 4px #02254d}
+.app-splash__progress{position:absolute;left:3.17%;top:27.27%;width:93.65%;height:36.36%;border-radius:999px;background:#12365d;border:1px solid #416184;overflow:hidden}
+.app-splash__progress>span{display:block;width:100%;height:100%;transform:scaleX(var(--splash-progress,0));transform-origin:left;background:linear-gradient(90deg,#ff7628,#ff9f3b 58%,#ffe17a);border-radius:inherit;transition:transform 160ms linear}
+.app-splash__mobile{display:none}
+@media(max-width:600px) and (orientation:portrait){
+ .app-splash{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;gap:18px;overflow:hidden}
+ .app-splash__desktop{display:none}
+ .app-splash__artwork,.app-splash__mobile{display:contents}
+ .app-splash__mobile h1{order:1}
+ .app-splash__english{order:2}
+ .app-splash__yard{order:3}
+ .app-splash__status{order:4}
+ .app-splash__progress-mask{order:5;position:relative;inset:auto;width:min(80%,300px);height:12px;flex:none;background:none;box-shadow:none}
+ .app-splash__progress{inset:0;width:100%;height:100%}
+ .app-splash__brand{order:6}
+ .app-splash__mobile h1{margin:0;text-align:center;font-size:clamp(21px,6.4vw,30px);font-weight:750;line-height:1.55;letter-spacing:.02em}
+ .app-splash__mobile h1 span{display:block;color:#ff8b24}
+ .app-splash__english{max-width:320px;margin:0;text-align:center;font-size:10px;letter-spacing:1.3px;line-height:1.8;color:#d9e3f7}
+ /* Crop only the supplied central yard art; its baked title/status stay outside. */
+ .app-splash__yard{width:min(100%,450px);aspect-ratio:900/570;position:relative;overflow:hidden;flex:none}
+ .app-splash__yard img{position:absolute;width:185.7778%;max-width:none;height:auto;left:-42.8889%;top:-30.7018%}
+ .app-splash__status{font-size:clamp(11px,3.1vw,14px);white-space:nowrap;text-align:center;margin:0;line-height:1.8}
+ /* The approved horizontal Hanwha wordmark is reused from the same PNG. */
+ .app-splash__brand{position:relative;width:205px;aspect-ratio:295/60;overflow:hidden;flex:none}
+ .app-splash__brand img{position:absolute;width:566.7797%;max-width:none;height:auto;left:-240.678%;top:-1408.3333%}
+}
+@media(max-height:600px) and (orientation:portrait){.app-splash{gap:12px;padding:12px}.app-splash__yard{width:min(80%,340px)}}
+@media(prefers-reduced-motion:reduce){.app-splash,.app-splash__progress>span{transition:none;transition-duration:0s!important}}

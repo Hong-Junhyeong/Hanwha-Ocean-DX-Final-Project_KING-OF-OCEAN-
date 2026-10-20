@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="합성 데이터를 활용한 조선소 블록 조립 생산관리 대시보드" />
+    <title>생산관리 통합 관리 시스템</title>
+    <link rel="preload" as="image" href="./assets/production-loading-screen.png" />
+    <link rel="stylesheet" href="./src/styles/splash.css" />
+  </head>
+  <body class="splash-active">
+    <div id="app" aria-busy="true" inert></div>
+    <div id="app-splash" class="app-splash" role="status" aria-live="polite" aria-label="생산·품질·일정 데이터를 불러오는 중">
+      <div class="app-splash__artwork">
+        <img class="app-splash__desktop" src="./assets/production-loading-screen.png" alt="생산관리 통합 관리 시스템. Production Management Integrated Control System. 생산·품질·일정 데이터를 불러오는 중. Hanwha Ocean." fetchpriority="high" />
+        <div class="app-splash__progress-mask">
+          <div class="app-splash__progress" role="progressbar" aria-label="진입 화면 준비 표시" aria-valuetext="표시 시간에 따른 진행 효과입니다. 실제 다운로드 진행률이 아닙니다."><span></span></div>
+        </div>
+      </div>
+      <div class="app-splash__mobile" aria-hidden="true">
+        <h1><span>생산관리</span>통합 관리 시스템</h1>
+        <p class="app-splash__english">Production Management Integrated Control System</p>
+        <div class="app-splash__yard"><img src="./assets/production-loading-screen.png" alt="" /></div>
+        <p class="app-splash__status">생산·품질·일정 데이터를 불러오는 중</p>
+        <div class="app-splash__brand"><img src="./assets/production-loading-screen.png" alt="" /></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
