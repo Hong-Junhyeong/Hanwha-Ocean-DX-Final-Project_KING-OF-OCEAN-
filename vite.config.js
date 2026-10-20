@@ -1,3 +1,13 @@
-import {defineConfig}from 'vite';
-// Phase 5 uses the installed ExcelJS dependency in all builds. No offline alias.
-export default defineConfig({server:{allowedHosts:['terminal.local']},build:{chunkSizeWarningLimit:1600}});
+
+import { defineConfig } from 'vite';
+
+// GitHub Pages uses the repository name as part of the URL.
+export default defineConfig({
+  base: process.env.VITE_BASE_PATH || '/',
+  server: {
+    allowedHosts: ['terminal.local'],
+  },
+  build: {
+    chunkSizeWarningLimit: 1600,
+  },
+});
